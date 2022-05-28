@@ -9,7 +9,7 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	Render(w, "./templates/index.html", nil)
+	Render(w, "./templates/home.html", nil)
 }
 
 func LoadFile(w http.ResponseWriter, r *http.Request) {
@@ -34,18 +34,18 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !transactionFile.Validate() {
-		Render(w, "./templates/index.html", transactionFile)
+		Render(w, "./templates/home.html", transactionFile)
 	}
 
 	if err := transactionFile.LoadFile(file); err != nil {
 		transactionFile.Errors["File"] = err.Error()
-		Render(w, "./templates/index.html", transactionFile)
+		Render(w, "./templates/home.html", transactionFile)
 		return
 	}
 
 	if transactionList, err := transactionFile.ReadFile(); err != nil {
 		transactionFile.Errors["File"] = err.Error()
-		Render(w, "./templates/index.html", transactionFile)
+		Render(w, "./templates/home.html", transactionFile)
 		return
 	} else {
 		m := make(map[string]int)
@@ -66,6 +66,8 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 
 		log.Printf("Total tx %v", count)
 		log.Printf("Monto tx %v", amount)
+
+		internal.SendEmail()
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)

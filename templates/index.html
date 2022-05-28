@@ -1,0 +1,90 @@
+<html>
+<head>
+    <style>
+        body {
+          box-sizing: border-box;
+        }        
+        
+        input[type=text] {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          resize: vertical;
+        }
+
+        input[type=text]:focus {
+  width: 100%;
+}
+        
+        label {
+          padding: 12px 12px 12px 0;
+          display: inline-block;
+        }
+        
+        input[type=submit] {
+          background-color: #04AA6D;
+          color: white;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          float: right;
+        }
+        
+        input[type=submit]:hover {
+          background-color: #45a049;
+        }
+        
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin:10px auto;
+            max-width: 400px;
+            padding: 20px 12px 10px 20px;
+            font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        }
+        .required {
+        color:red;
+        }
+
+        input[type="file"] {
+            /*display: none;*/
+            
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+      </style>
+        
+</head>
+<body>
+    <div class="container">
+        
+            <form method="POST" enctype="multipart/form-data">
+            <div>
+                {{ with .Errors.Email }}
+                <p class="required">{{ . }}</p>
+                {{ end }}
+                <label>Email <span class="required">*</span></label>
+                <input type="email" name="email" />
+            </div>
+            <div>
+                {{ with .Errors.File }}
+                <p class="required" >{{ . }}</p>
+                {{ end }}
+                <label>&nbsp;&nbsp;File <span class="required">*</span></label>
+                <label class="custom-file-upload"> 
+                    <i><input type="file" accept=".txt" name="q"></i> Custom Upload
+                </label>
+            </div>
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

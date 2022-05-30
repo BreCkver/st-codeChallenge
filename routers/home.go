@@ -1,11 +1,12 @@
 package routers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/BreCkver/st-codeChallenge/data"
 	"github.com/BreCkver/st-codeChallenge/internal"
+	"github.com/BreCkver/st-codeChallenge/models"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -18,7 +19,6 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ocurrio al initicializar "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	file, handler, err := r.FormFile("q")
 
 	if err != nil {
@@ -48,30 +48,39 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 		Render(w, "./templates/home.html", transactionFile)
 		return
 	} else {
-		m := make(map[string]int)
 
-		for _, tx := range transactionList {
-			m[tx.Period] += 1
+		template, summary, err := internal.GetTemplateEmail(transactionList, "Jaime")
+		if err != nil {
+			transactionFile.Errors["File"] = err.Error()
+			Render(w, "./templates/home.html", transactionFile)
+			return
 		}
 
-		var amount float32
-		var count int32
+		errEmail := internal.SendEmail(template, transactionFile.Email)
 
-		for i := 0; i < len(transactionList); i++ {
-			if transactionList[i].Type == "credit" {
-				count += 1
-				amount += transactionList[i].Amount
-			}
+		if errEmail != nil {
+			log.Printf("Error %v", errEmail.Error())
+			transactionFile.Errors["File"] = errEmail.Error()
+			Render(w, "./templates/home.html", transactionFile)
+			return
 		}
 
-		log.Printf("Total tx %v", count)
-		log.Printf("Monto tx %v", amount)
+		var final = models.TransactionsFile{
+			Account:         models.Account{UserName: "Jaime", Email: transactionFile.Email},
+			Summary:         summary,
+			TransactionList: transactionList,
+			ErrorList:       []string{"Error 01", "Error 02"},
+		}
 
-		internal.SendEmail()
+		id, err := data.TransacionFileSave(&final)
+		if err != nil {
+			transactionFile.Errors["File"] = err.Error()
+			Render(w, "./templates/home.html", transactionFile)
+			return
+		}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(m)
+		http.Redirect(w, r, "/confirmation?id="+id, http.StatusSeeOther)
+
 	}
 
 }

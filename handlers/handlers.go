@@ -15,6 +15,7 @@ func Handler() {
 	router := mux.NewRouter()
 	router.HandleFunc("/", routers.Index).Methods("GET")
 	router.HandleFunc("/", routers.LoadFile).Methods("POST")
+	router.HandleFunc("/confirmation", routers.Confirmation).Methods("GET")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

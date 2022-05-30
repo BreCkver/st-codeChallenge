@@ -9,8 +9,13 @@ import (
 	"github.com/BreCkver/st-codeChallenge/models"
 )
 
+const (
+	templateHome = "./templates/home.html"
+	uploadFolder = "./uploads/"
+)
+
 func Index(w http.ResponseWriter, r *http.Request) {
-	Render(w, "./templates/home.html", nil)
+	Render(w, templateHome, nil)
 }
 
 func LoadFile(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +24,7 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ocurrio al initicializar "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	file, handler, err := r.FormFile("q")
+	file, handler, err := r.FormFile("file")
 
 	if err != nil {
 		http.Error(w, "Ocurrio al leer"+err.Error(), http.StatusInternalServerError)
@@ -28,31 +33,31 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	transactionFile := &internal.Request{
-		Email:    r.PostFormValue("email"),
-		File:     handler.Filename,
-		FileName: "./uploads/" + handler.Filename,
+		Email:       r.PostFormValue("email"),
+		AccountName: r.PostFormValue("accountName"),
+		FileName:    uploadFolder + handler.Filename,
 	}
 
 	if !transactionFile.Validate() {
-		Render(w, "./templates/home.html", transactionFile)
+		Render(w, templateHome, transactionFile)
 	}
 
 	if err := transactionFile.LoadFile(file); err != nil {
 		transactionFile.Errors["File"] = err.Error()
-		Render(w, "./templates/home.html", transactionFile)
+		Render(w, templateHome, transactionFile)
 		return
 	}
 
 	if transactionList, err := transactionFile.ReadFile(); err != nil {
 		transactionFile.Errors["File"] = err.Error()
-		Render(w, "./templates/home.html", transactionFile)
+		Render(w, templateHome, transactionFile)
 		return
 	} else {
 
-		template, summary, err := internal.GetTemplateEmail(transactionList, "Jaime")
+		template, summary, err := internal.GetTemplateEmail(transactionList, transactionFile.AccountName)
 		if err != nil {
 			transactionFile.Errors["File"] = err.Error()
-			Render(w, "./templates/home.html", transactionFile)
+			Render(w, templateHome, transactionFile)
 			return
 		}
 
@@ -61,12 +66,12 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 		if errEmail != nil {
 			log.Printf("Error %v", errEmail.Error())
 			transactionFile.Errors["File"] = errEmail.Error()
-			Render(w, "./templates/home.html", transactionFile)
+			Render(w, templateHome, transactionFile)
 			return
 		}
 
 		var final = models.TransactionsFile{
-			Account:         models.Account{UserName: "Jaime", Email: transactionFile.Email},
+			Account:         models.Account{UserName: transactionFile.AccountName, Email: transactionFile.Email},
 			Summary:         summary,
 			TransactionList: transactionList,
 			ErrorList:       []string{"Error 01", "Error 02"},
@@ -75,7 +80,7 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 		id, err := data.TransacionFileSave(&final)
 		if err != nil {
 			transactionFile.Errors["File"] = err.Error()
-			Render(w, "./templates/home.html", transactionFile)
+			Render(w, templateHome, transactionFile)
 			return
 		}
 

@@ -14,10 +14,10 @@ import (
 
 /*Request */
 type Request struct {
-	Email    string
-	File     string
-	FileName string
-	Errors   map[string]string
+	Email       string
+	AccountName string
+	FileName    string
+	Errors      map[string]string
 }
 
 var rxEmail = regexp.MustCompile(".+@.+\\..+")
@@ -30,8 +30,12 @@ func (req *Request) Validate() bool {
 		req.Errors["Email"] = "Please enter a valid email address"
 	}
 
-	if strings.TrimSpace(req.File) == "" {
+	if strings.TrimSpace(req.FileName) == "" {
 		req.Errors["File"] = "Please select a valid file"
+	}
+
+	if strings.TrimSpace(req.AccountName) == "" {
+		req.Errors["AccountName"] = "Please enter a beneficiary name"
 	}
 
 	return len(req.Errors) == 0

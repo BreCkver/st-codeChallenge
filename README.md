@@ -60,3 +60,12 @@ The solution has one file testing already, so this file you can find it in Uploa
 ## Publish
 - The app was published in heroku, the link is:
     https://go-transactionsfile.herokuapp.com/
+   1. Home page
+  ![imagen](https://user-images.githubusercontent.com/59982584/171215650-9b1d82e5-0546-409c-af70-c5465ae9927d.png)
+   2. Confirmation page
+   ![imagen](https://user-images.githubusercontent.com/59982584/171215806-b9cac036-5bea-4f75-9581-3adeead87f8f.png)
+   3. Email confirmation
+   ![imagen](https://user-images.githubusercontent.com/59982584/171216463-0e8626c6-c81e-484f-893a-fb3b124d14c9.png)
+
+
+  

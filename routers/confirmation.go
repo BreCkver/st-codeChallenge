@@ -1,7 +1,24 @@
 package routers
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/BreCkver/st-codeChallenge/internal"
+)
 
 func Confirmation(w http.ResponseWriter, r *http.Request) {
-	Render(w, "./templates/confirmation.html", nil)
+
+	id := r.URL.Query().Get("id")
+	if len(id) < 1 {
+		http.Error(w, "The Id is mandatory", http.StatusBadRequest)
+		return
+	}
+
+	summary, err := internal.GetTrasaction(id)
+	if err != nil {
+		http.Error(w, "Sorry, something went wrong 03"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	Render(w, "./templates/confirmation.html", summary)
 }

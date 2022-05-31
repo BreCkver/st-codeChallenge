@@ -3,7 +3,6 @@ package internal
 import (
 	"bufio"
 	"io"
-	"log"
 	"mime/multipart"
 	"os"
 	"regexp"
@@ -14,19 +13,19 @@ import (
 
 /*Request */
 type Request struct {
-	Email       string
-	AccountName string
-	FileName    string
-	Errors      map[string]string
+	Account  models.Account
+	FileName string
+	Errors   map[string]string
 }
 
 var rxEmail = regexp.MustCompile(".+@.+\\..+")
+var rxUserName = regexp.MustCompile("[^a-zA-Z0-9 ]*$")
 
 func (req *Request) Validate() bool {
 	req.Errors = make(map[string]string)
 
-	match := rxEmail.Match([]byte(req.Email))
-	if match == false {
+	emailMatch := rxEmail.Match([]byte(req.Account.Email))
+	if emailMatch == false {
 		req.Errors["Email"] = "Please enter a valid email address"
 	}
 
@@ -34,8 +33,9 @@ func (req *Request) Validate() bool {
 		req.Errors["File"] = "Please select a valid file"
 	}
 
-	if strings.TrimSpace(req.AccountName) == "" {
-		req.Errors["AccountName"] = "Please enter a beneficiary name"
+	userMatch := rxUserName.Match([]byte(req.Account.UserName))
+	if strings.TrimSpace(req.Account.UserName) == "" || userMatch == false {
+		req.Errors["AccountName"] = "Please enter a beneficiary name, alphanumeric only"
 	}
 
 	return len(req.Errors) == 0
@@ -55,21 +55,39 @@ func (req *Request) LoadFile(file multipart.File) error {
 
 }
 
-func (req *Request) ReadFile() ([]*models.Transaction, error) {
-	var results []*models.Transaction
-	if fileN, err := os.Open(req.FileName); err != nil {
-		return nil, err
-	} else {
-		scanner := bufio.NewScanner(fileN)
-		for scanner.Scan() {
+func (req *Request) ReadFile() ([]*models.Transaction, []string) {
 
-			if t, err := ConvertTransaction(scanner.Text()); err != nil {
-				log.Printf("Error to convert Transaction: \n %v", err.Error())
-			} else {
-				results = append(results, t)
+	var errString []string
+	var results []*models.Transaction
+
+	if fileN, err := os.Open(req.FileName); err != nil {
+		errString = append(errString, err.Error())
+		return nil, errString
+	} else {
+
+		fi, err := fileN.Stat()
+		if err != nil {
+			errString = append(errString, err.Error())
+			return nil, errString
+		}
+
+		if fi.Size() == 0 {
+			errString = append(errString, "Can't process file empty")
+			return nil, errString
+		}
+
+		scanner := bufio.NewScanner(fileN)
+		if scanner.Scan() {
+			for scanner.Scan() {
+
+				if t, err := ConvertTransaction(scanner.Text()); err != nil {
+					errString = append(errString, err.Error())
+				} else {
+					results = append(results, t)
+				}
 			}
 		}
 
-		return results, nil
+		return results, errString
 	}
 }

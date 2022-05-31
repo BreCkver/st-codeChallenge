@@ -25,18 +25,18 @@ func ConvertTransaction(line string) (*models.Transaction, error) {
 	lineSplit := strings.Split(line, ",")
 
 	if len(lineSplit) != 3 {
-		return nil, errors.New("file line with structure wrong" + line)
+		return nil, errors.New(fmt.Sprintf("File's line with structure wrong. %v", line))
 	}
 
-	identifier, err := strconv.Atoi(lineSplit[0])
+	identifier, err := strconv.Atoi(strings.TrimSpace(lineSplit[0]))
 	if err != nil {
 		return nil, err
 	}
 
-	dateSplit := strings.Split(lineSplit[1], "/")
+	dateSplit := strings.Split(strings.TrimSpace(lineSplit[1]), "/")
 
 	if len(dateSplit) != 2 {
-		return nil, errors.New("Field date with structure wrong" + lineSplit[1])
+		return nil, errors.New("Field date with structure wrong, date: " + lineSplit[1])
 	}
 
 	monthTemp, err := strconv.Atoi(dateSplit[0])
@@ -45,7 +45,7 @@ func ConvertTransaction(line string) (*models.Transaction, error) {
 	}
 
 	if monthTemp > 12 || monthTemp < 0 {
-		return nil, errors.New("Field month needs between 1 and 12" + lineSplit[1])
+		return nil, errors.New("Field month needs between 1 and 12, line: " + lineSplit[1])
 	}
 
 	dayTemp, err := strconv.Atoi(dateSplit[1])
@@ -56,7 +56,7 @@ func ConvertTransaction(line string) (*models.Transaction, error) {
 	daysMonth := daysIn(time.Now().Year(), monthTemp)
 
 	if dayTemp > daysMonth || dayTemp < 0 {
-		return nil, errors.New("Field day needs between 1 and " + strconv.Itoa(daysMonth) + "line: " + lineSplit[1])
+		return nil, errors.New("Field day needs between 1 and " + strconv.Itoa(daysMonth) + ". line: " + lineSplit[1])
 	}
 
 	layOut := layoutDate
@@ -67,7 +67,7 @@ func ConvertTransaction(line string) (*models.Transaction, error) {
 		return nil, err
 	}
 
-	amount, err := strconv.ParseFloat(lineSplit[2], 64)
+	amount, err := strconv.ParseFloat(strings.TrimSpace(lineSplit[2]), 64)
 	if err != nil {
 		return nil, err
 	}

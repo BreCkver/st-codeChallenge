@@ -14,11 +14,13 @@ The app coverage the next use cases..
 * Fields in the form everyone is mandatories
 * File shouldn't empty  
 * Stored in database
+* Summary Page where you can access by file process id 
 
 #### Out of Scope
 * Transaction date and its validation then can be existed transaction from future
 * It's obvious that transaction was decrease/increase the balance account already, so there isn't validation about balance account
 * Files different format to csv
+* Transaction identifier isn't validated, so this value can be duplicated
 
 ## Project structure
 The architecture in this moment is simple, so it has the next structure:
@@ -49,3 +51,7 @@ NOTE: It's import say that app was pull in dockerhub, so you can find it in brec
 
 NOTE:
 The solution has one file testing already, so this file you can find it in Uploads its name is transaction-.csv
+
+## Publish
+- The app was published in heroku, the link is:
+    https://go-transactionsfile.herokuapp.com/

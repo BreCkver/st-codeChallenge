@@ -40,17 +40,22 @@ uploads             -> Directory to back up the files processed
 
 NOTE: It's import say that app was pull in dockerhub, so you can find it in breckver/nbchallenge
 
+## Prerequisites
+1. Git
+2. Docker
+3. Docker Compose to user Linux 
 ## How to compile and run 
 1. Make a new direcotory
-2. Change to new directory
-3. Decompress the solution
-4. Change to nbchallege directory where the sln protect be
+2. Move to new directory
+3. Donwload code with git, such as:  
+    git clone https://github.com/BreCkver/st-codeChallenge.git 
+4. Open PowerShell or similar, in it move to new directory 
 5. Execute the commands:
-	dotnet build 
-	dotnet run
+	docker-compose up
+6. Access to project from http://localhost:8089/
 
 NOTE:
-The solution has one file testing already, so this file you can find it in Uploads its name is transaction-01.csv
+The solution has one file testing already, so this file you can find it in Uploads folder, the file's name is transaction-01.csv
 
 ## Publish
 - The app was published in heroku, the link is:

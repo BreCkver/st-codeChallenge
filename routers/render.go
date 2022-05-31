@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-/*Render*/
+/*Render any html template to web browser*/
 func Render(w http.ResponseWriter, filename string, data interface{}) {
 	tmpl, err := template.ParseFiles(filename)
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"github.com/BreCkver/st-codeChallenge/internal"
 )
 
+/*Confirmation load information about specific identifier */
 func Confirmation(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")

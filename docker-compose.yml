@@ -1,0 +1,9 @@
+version: "3.9" 
+
+services:
+  web:
+      build: .
+      environment:
+          MONGODB_URI: "mongodb+srv://userTransaction:3F5KYgCkMvJZZmEe@cluster0.uywov.mongodb.net/?retryWrites=true&w=majority"
+      ports:
+          - "8089:8089"

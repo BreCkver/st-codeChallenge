@@ -14,10 +14,12 @@ const (
 	uploadFolder = "./uploads/"
 )
 
+/*Index Load initial page*/
 func Index(w http.ResponseWriter, r *http.Request) {
 	Render(w, templateHome, nil)
 }
 
+/*LoadFile handler when the user clic in the buttom submit */
 func LoadFile(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {

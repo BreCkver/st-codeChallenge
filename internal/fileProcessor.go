@@ -21,6 +21,7 @@ type Request struct {
 var rxEmail = regexp.MustCompile(".+@.+\\..+")
 var rxUserName = regexp.MustCompile("[^a-zA-Z0-9 ]*$")
 
+/*Validate the fields have any value */
 func (req *Request) Validate() bool {
 	req.Errors = make(map[string]string)
 
@@ -41,6 +42,7 @@ func (req *Request) Validate() bool {
 	return len(req.Errors) == 0
 }
 
+/*LoadFile in the project*/
 func (req *Request) LoadFile(file multipart.File) error {
 
 	f, err := os.OpenFile(req.FileName, os.O_WRONLY|os.O_CREATE, 0666)
@@ -55,6 +57,7 @@ func (req *Request) LoadFile(file multipart.File) error {
 
 }
 
+/*ReadFile that previosly was loaded*/
 func (req *Request) ReadFile() ([]*models.Transaction, []string) {
 
 	var errString []string

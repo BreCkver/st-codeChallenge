@@ -1,5 +1,6 @@
 package models
 
+/*Summary */
 type Summary struct {
 	AccountName      string `bson:"acountName" json:"acountName,omitempty"`
 	TotalBalance     string `bson:"totalBalance" json:"totalBalance,omitempty"`

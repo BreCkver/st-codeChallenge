@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,11 +12,8 @@ import (
 /*Conexion */
 func Conexion() *mongo.Client {
 
-	//ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	clientOptions := options.Client().ApplyURI("mongodb+srv://userTransaction:3F5KYgCkMvJZZmEe@cluster0.uywov.mongodb.net/?retryWrites=true&w=majority")
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_URI"))
 	client, err := mongo.Connect(context.TODO(), clientOptions)
-
-	//defer cancel()
 
 	if err != nil {
 		log.Fatal(err)

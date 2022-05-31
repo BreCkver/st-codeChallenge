@@ -17,7 +17,7 @@ const (
 	layoutDate = "20060102"
 )
 
-/*ConvertTransaction */
+/*ConvertTransaction conver string to Transaction*/
 func ConvertTransaction(line string) (*models.Transaction, error) {
 
 	Tx := new(models.Transaction)

@@ -35,6 +35,7 @@ func TransacionFileSave(txsFile *models.TransactionsFile) (string, error) {
 	return objIdentifier.Hex(), nil
 }
 
+/*GetTransactionFile */
 func GetTransactionFile(id string) (models.TransactionsFile, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)

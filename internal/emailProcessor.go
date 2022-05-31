@@ -35,6 +35,7 @@ func SendEmail(template string, destinatary string) error {
 	return nil
 }
 
+/*GetTemplateEmail to send in the email */
 func GetTemplateEmail(txList []*models.Transaction, accountName string) (string, *models.Summary, error) {
 
 	debitAverage := transactionTypeCalculateAverage(txList, "debit")

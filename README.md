@@ -50,7 +50,7 @@ NOTE: It's import say that app was pull in dockerhub, so you can find it in brec
 	dotnet run
 
 NOTE:
-The solution has one file testing already, so this file you can find it in Uploads its name is transaction-.csv
+The solution has one file testing already, so this file you can find it in Uploads its name is transaction-01.csv
 
 ## Publish
 - The app was published in heroku, the link is:

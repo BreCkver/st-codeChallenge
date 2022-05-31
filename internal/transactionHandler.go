@@ -5,6 +5,7 @@ import (
 	"github.com/BreCkver/st-codeChallenge/models"
 )
 
+/*TransactionSave store transaction list in data base*/
 func TransactionSave(txList []*models.Transaction, account *models.Account, errList []string) (string, error) {
 
 	template, summary, err := GetTemplateEmail(txList, account.UserName)
@@ -32,6 +33,7 @@ func TransactionSave(txList []*models.Transaction, account *models.Account, errL
 	return id, nil
 }
 
+/*GetTrasaction ge transaction list from database*/
 func GetTrasaction(id string) (*models.Summary, error) {
 
 	txFile, err := data.GetTransactionFile(id)

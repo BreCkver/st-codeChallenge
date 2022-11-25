@@ -27,7 +27,7 @@ func SendEmail(template string, destinatary string) error {
 
 	m.SetBody("text/html", template)
 
-	d := gomail.NewPlainDialer("smtp.gmail.com", 587, "breckver.dll@gmail.com", "rqrqmxdszmeudxmh")
+	d := gomail.NewPlainDialer("smtp.gmail.com", 587, "", "")
 
 	if err := d.DialAndSend(m); err != nil {
 		return err
